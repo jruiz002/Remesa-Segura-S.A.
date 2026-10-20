@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Memo RemesaSegura</title>
+<style>
+  @page { size: Letter; margin: 1.4cm 1.6cm; }
+  body { font-family: "Liberation Sans", Arial, sans-serif; font-size: 9.6pt; line-height: 1.28; color: #111; margin: 0; }
+  h1 { font-size: 13pt; margin: 0 0 2px; }
+  .meta { font-size: 8.6pt; color: #444; margin-bottom: 6px; }
+  h2 { font-size: 10pt; margin: 7px 0 2px; border-bottom: 1px solid #999; }
+  p { margin: 0 0 3px; text-align: justify; }
+  .decision { border: 1.5px solid #111; padding: 4px 7px; margin: 4px 0 4px; }
+  table { border-collapse: collapse; width: 100%; font-size: 8.4pt; margin: 2px 0 4px; }
+  th, td { border: 1px solid #888; padding: 1.5px 4px; vertical-align: top; }
+  th { background: #eee; text-align: left; }
+  td.n { text-align: right; white-space: nowrap; }
+  ol { margin: 0 0 3px 16px; padding: 0; }
+  li { margin: 0; }
+</style>
+</head>
+<body>
+
+<h1>Memo del comité técnico: lanzamiento del sistema de detección de lavado</h1>
+<div class="meta">RemesaSegura S.A. · Para: Gerencia General · Base: 6,000 remitentes/día, prevalencia 0.2% (12 casos/día) · CC3045 Deep Learning</div>
+
+<div class="decision"><b>Decisión: LANZAR CON CONDICIONES.</b> El lunes operamos en <b>U4 con los 8 analistas actuales</b> (≈36 alertas/día de 40 revisables, USD 431/día), para que toda alerta tenga revisión humana. Bajamos a U3 (14 analistas) y a U2 (50 analistas, ≈250 alertas/día, USD 3,000/día) a medida que crezca la capacidad y se revalide el modelo. U4 deja ≈6 de 12 casos/día sin detectar (≈USD 300,000/día de daño esperado); U2 lo reduce a 2.4 (USD 120,000).</div>
+
+<h2>1. Modelado y entrenamiento (Rol 1)</h2>
+<p>El modelo evaluado (época 20) está sobreajustado: la pérdida de validación subió de 0.21 (época 6) a 0.34. Recomendamos reentrenar con parada temprana (restaurando el mejor checkpoint), <i>weight decay</i> y <i>dropout</i>, y BCE ponderada (<code>pos_weight</code> hasta 499) o focal loss, con recalibración. La precisión reportada de 0.90–0.99 viene de una validación 50/50: con la prevalencia real es de 1.8% (U1) a 16.7% (U4), y en U2 es <b>3.9% con ≈249 alertas/día</b>. Ningún umbral es definitivo hasta recalcular la tabla con el modelo corregido.</p>
+
+<h2>2. Transferencia y ajuste fino (Rol 2)</h2>
+<p>Adaptamos el codificador del socio con <b>ajuste fino de los dos últimos bloques y LR 10× menor</b>: es la mejor estrategia evaluada (AUC 0.87), con 18% de parámetros entrenables y 1.5 GPU-h. El ajuste completo da 0.84 porque sobreajusta con solo 1,200 positivos y olvida lo aprendido de 3 millones de secuencias. LoRA r=8 (0.86, 2%, 1 GPU-h) queda como alternativa. <b>A la gerencia se le reporta el AUC temporal 0.81, no 0.87.</b> Antes de lanzar: re-normalizar los montos a la escala del socio y medir la deriva entre corredores (PSI o KS).</p>
+
+<h2>3. Validación temporal y métricas (Rol 3)</h2>
+<p>Las métricas de los Roles 1 y 2 usan partición aleatoria de ventanas, con fuga entre ventanas del mismo remitente. Con partición temporal (ene–mar → abr–may) el AUC baja de 0.87 a <b>0.81</b>, la cifra base. Exigimos validación temporal agrupada por remitente con embargo ≥ 30 días. Por los ciclos de 7, 15 y 30 días (pago semanal, quincenal y mensual), la ventana debe ser de al menos 31 días calendario. La exactitud no sirve (99.8% sin emitir una sola alerta): reportamos recall, precisión a prevalencia real, PR-AUC y recall@40 alertas/día.</p>
+
+<h2>4. Datos sintéticos y privacidad (Rol 4)</h2>
+<p>Usamos sintéticos <b>solo de difusión y solo en entrenamiento</b>: cubre 6 de 7 tipologías y sube el AUC temporal de <b>0.81 a 0.83</b>. La GAN (2 de 7, colapso de modo) no mejora y el VAE (5 de 7) promedia montos y produce secuencias borrosas. La prueba usa solo datos reales de abril y mayo. Como el <b>3% de los sintéticos son casi copias de clientes</b>, antes de usarlos se filtran por distancia al vecino real más cercano, se hace una auditoría de membership inference y no se comparten fuera de la empresa. La mejora de +0.02 debe confirmarse tras el filtrado.</p>
+
+<h2>5. Narrativas con LLM (Rol 5)</h2>
+<p>El LLM solo redacta borradores, con las transacciones de la alerta en contexto y temperatura 0.2. Los hechos inventados bajan de <b>15% a 5%</b> (6/40 → 2/40) y el ahorro es de 4.5 de 6 min por narrativa (75%), ≈180 min/día con 40 alertas. Como 5% sigue siendo inaceptable (IC 95% hasta 16.5% con n = 40), ninguna narrativa sale sin la firma del oficial ni sin un validador automático que compruebe que cada monto, fecha e ID existe en la alerta. Exigimos trazabilidad completa y coherencia con SHAP.</p>
+
+<h2>6. Explicabilidad (Rol 6)</h2>
+<p>SHAP es la explicación oficial: su error de eficiencia es ≤ <b>3×10⁻⁷</b> log-odds, así que la descomposición es exacta. LIME es inestable (Jaccard top-5 de 0.45 con 500 muestras, ≈3 de 5 variables; 0.78 con 5,000) y la atención no explica el puntaje (ρ = 0.35 con SHAP). El oficial recibe el top-5 SHAP con sus transacciones; el regulador, la metodología, el AUC 0.81 y un registro por alerta; el cliente, solo un aviso legal genérico, sin contrafactuales, porque enseñarían a evadir el sistema (<i>tipping-off</i>). Antes de lanzar, SHAP debe pasar pruebas de fidelidad y estabilidad.</p>
+
+<h2>7. Operaciones y cumplimiento (Rol 7)</h2>
+<p>El equipo revisa <b>40 alertas/día</b> (8 × 5). U2 generó ≈250 en el piloto (USD 3,000/día): 210 (84%) quedarían sin revisión humana. El piloto confirma ≈10/día (83% de 12) con precisión real ≈4%. Por eso arrancamos en U4 (≈36 alertas) sin dejar alertas sin revisar y ampliamos capacidad hacia U3 (14 analistas) y U2 (50). Pasar de U4 a U2 cuesta ≈USD 2,558/día en revisión y evita ≈USD 180,000/día en daño esperado.</p>
+
+<h2>Umbral, capacidad y condiciones (Task 2.2)</h2>
+<table>
+<tr><th>Umbral</th><th>Alertas/día</th><th>Detectados</th><th>No detectados</th><th>Precisión</th><th>Revisión/día</th><th>Daño esperado/día</th><th>Analistas</th></tr>
+<tr><td>U1</td><td class="n">609.6</td><td class="n">10.8</td><td class="n">1.2</td><td class="n">1.8%</td><td class="n">USD 7,315</td><td class="n">USD 60,000</td><td class="n">122</td></tr>
+<tr><td>U2</td><td class="n">249.1</td><td class="n">9.6</td><td class="n">2.4</td><td class="n">3.9%</td><td class="n">USD 2,989</td><td class="n">USD 120,000</td><td class="n">50</td></tr>
+<tr><td>U3</td><td class="n">67.7</td><td class="n">7.8</td><td class="n">4.2</td><td class="n">11.5%</td><td class="n">USD 812</td><td class="n">USD 210,000</td><td class="n">14</td></tr>
+<tr><td>U4</td><td class="n">35.9</td><td class="n">6.0</td><td class="n">6.0</td><td class="n">16.7%</td><td class="n">USD 431</td><td class="n">USD 300,000</td><td class="n">8</td></tr>
+</table>
+<p>Solo U4 cabe en 40 revisiones/día. Cada paso hacia un umbral más bajo evita mucho más daño del que cuesta revisar (U4→U3: USD 381 por USD 90,000). U2 es el objetivo porque es el único punto que el piloto corrobora (≈250 alertas, ≈10 confirmados). U1 exige 122 analistas y no está validado. <b>Condiciones medibles:</b></p>
+<ol>
+<li>0 alertas sin revisar por día; alertas/día ≤ 5 × analistas activos (U3 con ≥ 14 analistas, U2 con ≥ 50).</li>
+<li>Antes de bajar de U4: modelo reentrenado y validado con partición temporal por remitente, con AUC ≥ 0.81 y recall ≥ 0.80 en el umbral objetivo.</li>
+<li>Narrativas: 100% pasan el validador automático y 0 hechos inventados en la auditoría mensual (≥ 40 narrativas).</li>
+<li>SHAP aprueba las pruebas de fidelidad y estabilidad (Jaccard top-5 ≥ 0.90, propuesta) y hay 0 contrafactuales al cliente.</li>
+<li>Sintéticos solo tras el filtrado de privacidad (0 casi duplicados); deriva de montos monitoreada mensualmente.</li>
+</ol>
+
+<h2>Cifras que no cuadraron y cómo se resolvieron</h2>
+<p><b>Precisión 0.95 vs ≈4%:</b> 0.95 sale de la validación 50/50 y 4% de la prevalencia real. Recall y FPR se conservan, la precisión no; se usa 3.9%. <b>AUC 0.87 vs 0.81:</b> partición aleatoria (con fuga) frente a temporal; se usa 0.81. <b>AUC 0.83:</b> es temporal pero previo al filtrado de privacidad, así que no entra en la decisión. <b>Tabla U2 (249 alertas, 9.6 TP) vs piloto (≈250, 10):</b> coinciden, lo que corrobora U2; U3 y U4 no están validados. <b>40 vs 250 alertas/día:</b> son oferta y demanda; la brecha obliga a U4 al inicio. <b>Cifras optimistas:</b> precisión 0.90–0.99, AUC 0.87, 0.83 sin filtrar, 5% de alucinación (n = 40) y el piloto mismo. Con 40 revisiones/día no se pudieron revisar las 250 alertas, así que el 4% viene de una muestra, y el 83% compara contra una estimación de 12 casos.</p>
+
+<h2>Crítica de la IA</h2>
+<p>(1) La IA justificó la BCE ponderada con "un predictor constante obtiene pérdida 0.014", sin notar que contradice la pérdida de entrenamiento de 0.08 del caso. Lo verificamos a mano: −(0.002·ln 0.002 + 0.998·ln 0.998) = 0.0144. (2) La IA mezcló bases al calcular U4→U2: cobró 210 × 12 = USD 2,520 contra la capacidad actual, pero midió el beneficio contra U4. Recalculado con la misma base: (249.1 − 35.9) × 12 = USD 2,558. (3) La IA tomó el 4% y el 83% del piloto sin cuestionar cómo se revisaron 250 alertas con capacidad para 40. (4) La IA propuso una ventana de 30 días para captar el rezago de 30, cuando esa ventana solo contiene rezagos de 0 a 29; se corrigió a ≥ 31 días. (5) La IA aplicó la tabla del Rol 1 a producción sin ajustarla por la caída a AUC temporal 0.81; el piloto solo la corrobora para U2.</p>
+
+<h2>Defensa ante el regulador</h2>
+<p>Presentamos la validación temporal (AUC 0.81, ene–mar → abr–may), el piloto de dos semanas en U2 (≈250 alertas/día, ≈10 confirmados/día), las explicaciones SHAP por alerta (error 3×10⁻⁷) y el registro auditable de la revisión humana de cada alerta. Reconocemos un riesgo residual: hasta ampliar el equipo, U4 deja ≈6 de 12 casos/día sin detectar, y el modelo puede degradarse por deriva del corredor. Nos comprometemos a informar mensualmente recall, precisión, deriva de montos, la auditoría de narrativas y una cola sin revisar en 0, y a bajar a U3 y luego a U2 conforme crezca la capacidad. La decisión la asume la Gerencia General a propuesta de este comité; el Oficial de Cumplimiento responde por la operación y el reporte.</p>
+
+<h2>Contribuciones individuales</h2>
+<table>
+<tr><th style="width:15%">Integrante (rol)</th><th>Aporte</th><th>Corrección a la IA y cómo se verificó</th><th>Dato que necesitó de otro rol</th></tr>
+<tr><td>[Nombre] (1)</td><td>Diagnóstico de sobreajuste, pérdida ponderada y precisión real</td><td>[completar]</td><td>Piloto de 250 alertas (Rol 7)</td></tr>
+<tr><td>[Nombre] (2)</td><td>Elección de ajuste fino de 2 bloques y riesgos de transferencia</td><td>[completar]</td><td>AUC temporal 0.81 (Rol 3)</td></tr>
+<tr><td>[Nombre] (3)</td><td>Validación temporal, ventana y métricas</td><td>[completar]</td><td>Capacidad de 40/día para recall@40 (Rol 7)</td></tr>
+<tr><td>[Nombre] (4)</td><td>Recomendación de difusión y mitigación de privacidad</td><td>[completar]</td><td>Base 0.81 (Rol 3)</td></tr>
+<tr><td>[Nombre] (5)</td><td>Tasas de alucinación, ahorro y controles del LLM</td><td>[completar]</td><td>Capacidad 40/día (Rol 7) y SHAP (Rol 6)</td></tr>
+<tr><td>[Nombre] (6)</td><td>Explicación SHAP por audiencia y validación previa</td><td>[completar]</td><td>AUC 0.81 (Rol 3) y narrativas (Rol 5)</td></tr>
+<tr><td>[Nombre] (7)</td><td>Capacidad, costos y plan escalonado</td><td>[completar]</td><td>Tabla de umbrales (Rol 1)</td></tr>
+</table>
+
+</body>
+</html>

@@ -27,7 +27,7 @@ Base: 6,000 remitentes/día con 0.2% de prevalencia (12 positivos y 5,988 negati
 
 - **(i) Priorizar por puntaje:** si las 40 alertas revisadas tuvieran la precisión del piloto (~4%), saldrían 40 × 0.04 = **1.6 casos/día**. Ordenar por puntaje debería dar más, pero el piloto no lo mide. Si el puntaje ordena igual que la tabla del Rol 1, las 40 de mayor puntaje se parecen mucho a U4, que tiene 36 alertas. Además, las otras 210 alertas que genera U2 quedarían sin revisar, lo que choca con la regla de revisión humana.
 - **(ii) Subir el umbral:** U4 es la única opción que cabe hoy en 40, pero detecta solo **6 de 12**. Eso deja 6 × 50,000 = **USD 300,000/día** de daño esperado. U3 detecta 7.8 con ≈68 alertas, lo que requiere ampliar el equipo a 14 analistas (6 más).
-- **(iii) Ampliar capacidad** (contratación, personal temporal u outsourcing supervisado): llegar a U2 cuesta en revisión ≈210 × 12 = **USD 2,520/día** adicionales. A cambio detecta ≈3.6 casos más que U4 (9.6 − 6), es decir 3.6 × 50,000 = **USD 180,000/día** de daño evitado. El beneficio supera al costo unas 70 veces, aunque el costo de contratar no viene en los datos.
+- **(iii) Ampliar capacidad** (contratación, personal temporal u outsourcing supervisado): pasar de U4 a U2 cuesta en revisión ≈(249.1 − 35.9) × 12 = **USD 2,558/día** adicionales (misma base que el beneficio). A cambio detecta ≈3.6 casos más que U4 (9.6 − 6), es decir 3.6 × 50,000 = **USD 180,000/día** de daño evitado. El beneficio supera al costo unas 70 veces, aunque el costo de contratar no viene en los datos.
 - **LLM con transacciones en contexto (Rol 5):** la narrativa baja de 6 a 1.5 min, un ahorro de 4.5 min por alerta (≈18.75 h/día con 250 alertas). Tiene 2/40 = 5% de hechos inventados, así que siempre requiere revisión humana. No conozco el tiempo total de revisión por alerta, por eso no puedo convertir ese ahorro en alertas/analista adicionales.
 - **Recomendación escalonada (lanzar con condiciones):**
   1. **Inmediato:** operar en **U4** (≈36 ≤ 40 alertas/día), con el 100% de las alertas revisadas por una persona.
@@ -38,7 +38,7 @@ Base: 6,000 remitentes/día con 0.2% de prevalencia (12 positivos y 5,988 negati
 
 ## Sección 7 del memo
 
-El equipo revisa 40 alertas/día (8 × 5). U2 genera ≈250 en el piloto (USD 3,000/día), así que 210 alertas (84%) quedarían sin revisión humana. El piloto confirma 10/día (83% de 12) con una precisión real ≈4%, frente al 0.95 reportado en validación 50/50. Recomendamos **lanzar con condiciones**: empezar en U4 (≈36 alertas, cabe en la capacidad) sin dejar alertas sin revisar, y ampliar capacidad hacia U3 (14 analistas) y luego U2 (50). Cada caso adicional detectado evita USD 50,000, y pasar de U4 a U2 evita ≈USD 180,000/día a un costo de revisión de ≈USD 2,520/día.
+El equipo revisa 40 alertas/día (8 × 5). U2 genera ≈250 en el piloto (USD 3,000/día), así que 210 alertas (84%) quedarían sin revisión humana. El piloto confirma 10/día (83% de 12) con una precisión real ≈4%, frente al 0.95 reportado en validación 50/50. Recomendamos **lanzar con condiciones**: empezar en U4 (≈36 alertas, cabe en la capacidad) sin dejar alertas sin revisar, y ampliar capacidad hacia U3 (14 analistas) y luego U2 (50). Cada caso adicional detectado evita USD 50,000, y pasar de U4 a U2 evita ≈USD 180,000/día a un costo de revisión de ≈USD 2,558/día.
 
 ## Cifras a compartir / dependencias
 

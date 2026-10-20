@@ -13,7 +13,7 @@
 
 - **Interpretación:** los picos a **7, 15 y 30 días** muestran ciclos **semanal, quincenal y mensual**. Esto coincide con el envío de remesas atado al pago de salario (semana, quincena, fin de mes). Un monto alto el día de pago es normal, no una anomalía.
 - **Problema de la ventana actual:** 10 transacciones no corresponden a un horizonte fijo de días. Para un remitente frecuente cubren una o dos semanas (no llegan al ciclo mensual). Para uno esporádico cubren meses (mezclan varios ciclos). La primera etapa aprende "normalidad" con escalas de tiempo distintas por remitente.
-- **Recomendación: ventana de 30 días calendario**, con agregación diaria e indicadores de día de semana, quincena y fin de mes.
+- **Recomendación: ventana de al menos 31 días calendario** (un ciclo mensual completo: una ventana de exactamente 30 días solo contiene rezagos de 0 a 29 y no vería el de 30), con agregación diaria e indicadores de día de semana, quincena y fin de mes.
   - Es la ventana mínima que contiene los tres ciclos completos (≈4 semanas, 2 quincenas, 1 mes).
   - Una de 60 días cubriría dos ciclos mensuales, pero no cabe con el calendario disponible. Train ene–mar (≈90 días) daría apenas 1–2 ventanas independientes por remitente. Val abr–may (≈61 días) no admitiría una sola ventana de 60 días más el embargo.
 - **Desviaciones:** medirlas contra el **patrón estacional propio del remitente** (su perfil por día del ciclo, estimado con meses anteriores), no contra un promedio global. Así el ciclo de salario no se confunde con riesgo.
@@ -31,7 +31,7 @@
 
 ## Sección 3 del memo
 
-Las métricas de los Roles 1 y 2 se calcularon con partición aleatoria de ventanas y están infladas por fuga de información entre ventanas del mismo remitente. Con partición temporal (ene–mar → abr–may) el AUC baja de 0.87 a 0.81. **Usar 0.81 como cifra base** y exigir validación temporal agrupada por remitente, con embargo ≥ 30 días. Por los ciclos de 7, 15 y 30 días, redefinir la ventana como 30 días calendario y medir desviaciones contra el patrón propio del remitente. La exactitud (99.8% sin alertar nada) se descarta: reportar recall, precisión a 0.2% de prevalencia, PR-AUC y recall@40 alertas/día.
+Las métricas de los Roles 1 y 2 se calcularon con partición aleatoria de ventanas y están infladas por fuga de información entre ventanas del mismo remitente. Con partición temporal (ene–mar → abr–may) el AUC baja de 0.87 a 0.81. **Usar 0.81 como cifra base** y exigir validación temporal agrupada por remitente, con embargo ≥ 30 días. Por los ciclos de 7, 15 y 30 días, redefinir la ventana como al menos 31 días calendario y medir desviaciones contra el patrón propio del remitente. La exactitud (99.8% sin alertar nada) se descarta: reportar recall, precisión a 0.2% de prevalencia, PR-AUC y recall@40 alertas/día.
 
 ## Cifras a compartir / dependencias
 
