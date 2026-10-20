@@ -4,14 +4,14 @@
 <meta charset="utf-8">
 <title>Memo RemesaSegura</title>
 <style>
-  @page { size: Letter; margin: 1.4cm 1.6cm; }
-  body { font-family: "Liberation Sans", Arial, sans-serif; font-size: 9.6pt; line-height: 1.28; color: #111; margin: 0; }
+  @page { size: Letter; margin: 1.2cm 1.4cm; }
+  body { font-family: "Liberation Sans", Arial, sans-serif; font-size: 9.3pt; line-height: 1.24; color: #111; margin: 0; }
   h1 { font-size: 13pt; margin: 0 0 2px; }
   .meta { font-size: 8.6pt; color: #444; margin-bottom: 6px; }
   h2 { font-size: 10pt; margin: 7px 0 2px; border-bottom: 1px solid #999; }
   p { margin: 0 0 3px; text-align: justify; }
   .decision { border: 1.5px solid #111; padding: 4px 7px; margin: 4px 0 4px; }
-  table { border-collapse: collapse; width: 100%; font-size: 8.4pt; margin: 2px 0 4px; }
+  table { border-collapse: collapse; width: 100%; font-size: 8.1pt; margin: 2px 0 4px; }
   th, td { border: 1px solid #888; padding: 1.5px 4px; vertical-align: top; }
   th { background: #eee; text-align: left; }
   td.n { text-align: right; white-space: nowrap; }
@@ -76,13 +76,13 @@
 <h2>Contribuciones individuales</h2>
 <table>
 <tr><th style="width:15%">Integrante (rol)</th><th>Aporte</th><th>Corrección a la IA y cómo se verificó</th><th>Dato que necesitó de otro rol</th></tr>
-<tr><td>[Nombre] (1)</td><td>Diagnóstico de sobreajuste, pérdida ponderada y precisión real</td><td>[completar]</td><td>Piloto de 250 alertas (Rol 7)</td></tr>
-<tr><td>[Nombre] (2)</td><td>Elección de ajuste fino de 2 bloques y riesgos de transferencia</td><td>[completar]</td><td>AUC temporal 0.81 (Rol 3)</td></tr>
-<tr><td>[Nombre] (3)</td><td>Validación temporal, ventana y métricas</td><td>[completar]</td><td>Capacidad de 40/día para recall@40 (Rol 7)</td></tr>
-<tr><td>[Nombre] (4)</td><td>Recomendación de difusión y mitigación de privacidad</td><td>[completar]</td><td>Base 0.81 (Rol 3)</td></tr>
-<tr><td>[Nombre] (5)</td><td>Tasas de alucinación, ahorro y controles del LLM</td><td>[completar]</td><td>Capacidad 40/día (Rol 7) y SHAP (Rol 6)</td></tr>
-<tr><td>[Nombre] (6)</td><td>Explicación SHAP por audiencia y validación previa</td><td>[completar]</td><td>AUC 0.81 (Rol 3) y narrativas (Rol 5)</td></tr>
-<tr><td>[Nombre] (7)</td><td>Capacidad, costos y plan escalonado</td><td>[completar]</td><td>Tabla de umbrales (Rol 1)</td></tr>
+<tr><td>José Ruíz (1)</td><td>Diagnóstico de sobreajuste, pérdida ponderada y precisión real</td><td>La IA citó una pérdida de 0.014 para un predictor constante sin notar que contradice el 0.08 de entrenamiento; se recalculó a mano: 0.0144</td><td>Piloto de 250 alertas (Rol 7)</td></tr>
+<tr><td>José Auyón (2)</td><td>Elección de ajuste fino de 2 bloques y riesgos de transferencia</td><td>La IA ordenó las estrategias con AUC de partición aleatoria; al cruzarlo con el Rol 3, solo la elegida tiene AUC temporal (0.81) y el orden de las demás no está validado</td><td>AUC temporal 0.81 (Rol 3)</td></tr>
+<tr><td>Gerardo Fernández (3)</td><td>Validación temporal, ventana y métricas</td><td>La IA propuso una ventana de 30 días para captar el rezago de 30; esa ventana solo tiene rezagos de 0 a 29, así que se corrigió a ≥ 31 días</td><td>Capacidad de 40/día para recall@40 (Rol 7)</td></tr>
+<tr><td>David Juárez (4)</td><td>Recomendación de difusión y mitigación de privacidad</td><td>La IA propuso filtrar por distancia sin fijar un umbral; el README no da ninguno, así que se definió como criterio 0 casi duplicados tras la auditoría</td><td>Base 0.81 (Rol 3)</td></tr>
+<tr><td>Juan Diego Solis (5)</td><td>Tasas de alucinación, ahorro y controles del LLM</td><td>La IA afirmó que el ahorro de 4.5 min no aumenta la capacidad; el caso no da el tiempo de revisión por alerta, así que quedó como limitación y no como conclusión</td><td>Capacidad 40/día (Rol 7) y SHAP (Rol 6)</td></tr>
+<tr><td>Dillary Cruz (6)</td><td>Explicación SHAP por audiencia y validación previa</td><td>La IA presentó criterios (Jaccard ≥ 0.90, fidelidad 2× frente al azar) que no salen de los datos; se comprobó en el README y se marcaron como propuesta</td><td>AUC 0.81 (Rol 3) y narrativas (Rol 5)</td></tr>
+<tr><td>Alex de la Cruz (7)</td><td>Capacidad, costos y plan escalonado</td><td>La IA calculó U4→U2 como 210 × 12 = USD 2,520 mezclando bases; con la misma base: (249.1 − 35.9) × 12 = USD 2,558</td><td>Tabla de umbrales (Rol 1)</td></tr>
 </table>
 
 </body>

@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Decisión RemesaSegura</title>
+<style>
+  @page { size: 13.333in 7.5in; margin: 0; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: "Liberation Sans", Arial, sans-serif; color: #14213d; background: #fff; }
+  .slide { width: 13.333in; height: 7.5in; padding: 0.42in 0.55in; display: flex; flex-direction: column; gap: 0.2in; }
+  .top { display: flex; justify-content: space-between; align-items: flex-end; border-bottom: 3px solid #14213d; padding-bottom: 0.08in; }
+  .top h1 { margin: 0; font-size: 22pt; }
+  .top .sub { font-size: 12pt; color: #555; }
+  .decision { background: #14213d; color: #fff; border-radius: 10px; padding: 0.16in 0.3in; display: flex; align-items: center; gap: 0.35in; }
+  .decision .tag { font-size: 30pt; font-weight: 700; letter-spacing: 0.5px; white-space: nowrap; }
+  .decision .why { font-size: 13.5pt; line-height: 1.3; }
+  .grid { display: grid; grid-template-columns: 1.15fr 1fr 1fr; gap: 0.22in; flex: 1; }
+  .card { border: 2px solid #d0d6e2; border-radius: 10px; padding: 0.16in 0.2in; }
+  .card h2 { margin: 0 0 0.08in; font-size: 12pt; text-transform: uppercase; letter-spacing: 0.6px; color: #5a6478; }
+  .big { font-size: 34pt; font-weight: 700; line-height: 1.05; }
+  .big small { font-size: 15pt; font-weight: 400; }
+  .card p, .card li { font-size: 13pt; line-height: 1.3; margin: 0.04in 0; }
+  .card ul { margin: 0; padding-left: 0.22in; }
+  .steps { display: flex; flex-direction: column; gap: 0.07in; margin-top: 0.06in; }
+  .step { display: grid; grid-template-columns: 0.95in 1fr; align-items: center; font-size: 13pt; }
+  .step b { background: #e8ecf4; border-radius: 6px; padding: 0.03in 0.08in; text-align: center; }
+  .step.now b { background: #fca311; color: #14213d; }
+  .risk { border-color: #c1121f; }
+  .risk .big { color: #c1121f; }
+  .accent { border-color: #fca311; }
+  .bottom { font-size: 11.5pt; color: #333; border-top: 1px solid #d0d6e2; padding-top: 0.08in; display: flex; justify-content: space-between; gap: 0.3in; }
+</style>
+</head>
+<body>
+<div class="slide">
+  <div class="top">
+    <h1>Detección de lavado en remesas: recomendación del comité técnico</h1>
+    <div class="sub">RemesaSegura S.A. · 6,000 remitentes/día · 12 casos/día</div>
+  </div>
+
+  <div class="decision">
+    <div class="tag">LANZAR CON CONDICIONES</div>
+    <div class="why">Toda alerta debe revisarla una persona. Arrancamos con el umbral que la capacidad actual permite y bajamos el umbral a medida que crecen el equipo y la evidencia.</div>
+  </div>
+
+  <div class="grid">
+    <div class="card">
+      <h2>Umbral y capacidad elegidos</h2>
+      <div class="steps">
+        <div class="step now"><b>Lunes: U4</b><span>8 analistas · ≈36 de 40 alertas/día · USD 431/día · detecta ≈6 de 12</span></div>
+        <div class="step"><b>U3</b><span>14 analistas · ≈68 alertas/día · USD 812/día · detecta ≈7.8 de 12</span></div>
+        <div class="step"><b>Meta: U2</b><span>50 analistas · ≈250 alertas/día · USD 3,000/día · detecta ≈10 de 12 (piloto)</span></div>
+      </div>
+      <p style="margin-top:0.1in">Cada paso evita más daño del que cuesta revisar: U4→U2 cuesta <b>+USD 2,558/día</b> y evita <b>≈USD 180,000/día</b>.</p>
+    </div>
+
+    <div class="card accent">
+      <h2>Cifra que más pesó</h2>
+      <div class="big">40 <small>revisiones/día</small><br>vs 250 <small>alertas/día</small></div>
+      <p>En U2 quedarían 210 alertas diarias sin revisión humana. La precisión real es <b>3.9%</b>, no la 0.95 que se reportó en una validación 50/50.</p>
+    </div>
+
+    <div class="card risk">
+      <h2>Principal riesgo</h2>
+      <div class="big">≈6 de 12 <small>casos/día sin detectar en U4</small></div>
+      <p>≈USD 300,000/día de daño esperado hasta ampliar el equipo. Además, el desempeño real es menor al reportado: AUC <b>0.87 → 0.81</b> con validación temporal.</p>
+    </div>
+  </div>
+
+  <div class="bottom">
+    <span><b>Condiciones:</b> 0 alertas sin revisar · revalidación temporal (AUC ≥ 0.81, recall ≥ 0.80) antes de bajar de U4 · narrativas LLM con 0 hechos inventados · SHAP validado y sin contrafactuales al cliente · sintéticos solo filtrados (0 casi duplicados)</span>
+  </div>
+</div>
+</body>
+</html>
