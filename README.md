@@ -1,6 +1,6 @@
 # CC3045 - Deep Learning | Examen parcial
 
-> **Documento de trabajo basado en `S16 - Examen Practico.pdf`.** Este README organiza el caso, los datos y las tareas del examen para que cada integrante o agente identifique su responsabilidad. No contiene soluciones ni añade requisitos ajenos al PDF.
+> **Documento de trabajo basado en `S16 - Examen Practico.pdf`.** Este README organiza el caso, los datos y las tareas del examen para que cada integrante o agente identifique su responsabilidad. No contiene soluciones. Los datos y requisitos provienen del PDF; las tablas de dependencias, las líneas «Información que debe compartir» y el checklist de cierre son apoyos de organización del grupo, no texto del PDF.
 
 ## 1. Objetivo del examen
 
@@ -211,6 +211,8 @@ Todos los roles deben completar los incisos de su task y redactar **su sección 
 
 **Responsabilidad:** identificar explicaciones confiables y adaptar su comunicación a cada audiencia.
 
+**Contexto:** el regulador exige que cada alerta pueda explicarse, y el equipo de cumplimiento exige que la explicación sea confiable.
+
 **Datos asignados:**
 
 | Prueba | Resultado |
@@ -283,7 +285,8 @@ Usar explícitamente:
 - Tabla de umbrales del **Rol 1**.
 - **6,000 remitentes por día**.
 - **0.2% de positivos**.
-- Capacidad y costo operativo del **Rol 7**.
+
+Para justificar la elección en 2.2.b se usan además la capacidad del equipo, el costo de revisión y el costo de no detectar (datos del **Rol 7**).
 
 - [ ] **2.2.a** Calcular y completar para **cada umbral**: alertas diarias esperadas, casos detectados, casos no detectados, precisión esperada y costo diario de revisión.
 - [ ] **2.2.b** Elegir **umbral y capacidad operativa**; justificar con capacidad del equipo, costo de revisión y costo de no detectar casos.
@@ -346,7 +349,7 @@ El documento completo no puede superar **dos páginas**. Integrar en este orden:
 
 ### Task 3.1 - Presentación grupal
 
-- [ ] Preparar **una sola diapositiva** o **un esquema de una página**.
+- [ ] Preparar **con IA** **una sola diapositiva** o **un esquema de una página**.
 - [ ] Incluir **decisión**, **umbral elegido**, **capacidad elegida**, **cifra más determinante** y **principal riesgo**.
 - [ ] Ensayar **una vez**, con cronómetro, la exposición de **dos minutos**.
 - [ ] Comprobar que **todos** pueden explicar las siete secciones.
@@ -357,7 +360,7 @@ El documento completo no puede superar **dos páginas**. Integrar en este orden:
   - **2 minutos** de exposición.
   - **3 minutos** de preguntas.
 - El docente sortea el orden de los grupos.
-- Después de la exposición, **se sortea un integrante** que responderá **solo** las preguntas.
+- Después de la exposición, **se sortea un integrante** que responderá **solo** las preguntas. Nadie sabe de antemano quién será.
 - Las preguntas pueden tratar su propia sección, cualquier otra sección y **el uso de IA**.
 
 ## 7. Rúbrica de evaluación

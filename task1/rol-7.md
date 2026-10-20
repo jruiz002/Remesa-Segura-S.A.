@@ -13,6 +13,7 @@ Datos: 8 analistas × 5 alertas/día; USD 12 por alerta; piloto de 2 semanas con
 - **Confirmados detectados en el piloto:** 4% × 250 = **10 casos/día**, es decir **10 / 12 = 83%** de los casos esperados (recall ≈ 0.83). Es consistente con el recall 0.80 de U2 del Rol 1: 0.80 × 12 = 9.6/día.
 - **Cifra a conciliar:** la precisión real del piloto es **≈4%**, y el Rol 1 reportó **0.95** en validación remuestreada 50/50. Con la prevalencia real, U2 da 9.6 VP + 0.04 × 5,988 = 239.5 FP ≈ 249 alertas, con una precisión de ≈3.9%. Eso reproduce el piloto, así que el 0.95 solo vale para una muestra balanceada.
 - **No detectados:** 12 − 10 ≈ **2 casos/día**, que dan 2 × 50,000 = **USD 100,000/día** de daño esperado.
+- **Cifra optimista a conciliar (Task 2.1):** con 40 revisiones/día, el equipo no pudo revisar las ≈250 alertas/día del piloto (≈3,500 en dos semanas frente a ≈560 revisiones posibles). El «4% confirmadas» tuvo que salir de una muestra o de personal adicional, y el 83% de detección compara contra los 12 casos/día *esperados*, no contra casos perdidos medidos. Ambas cifras deben tratarse como estimaciones, no como mediciones.
 
 ## 1.7.c
 
